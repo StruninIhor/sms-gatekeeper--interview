@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsGatekeeper", "SmsGatekeeper\SmsGatekeeper.csproj", "{EAE0B95D-6B57-4C15-A519-459FF7776B7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmsGatekeeper", "SmsGatekeeper\SmsGatekeeper.csproj", "{EAE0B95D-6B57-4C15-A519-459FF7776B7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HistoryWorker", "HistoryWorker\HistoryWorker.csproj", "{4AE0D465-15AB-4AAF-9FE8-66FAAEAFE226}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsGatekeeper.Domain", "SmsGatekeeper.Domain\SmsGatekeeper.Domain.csproj", "{B2B30C81-50F2-40D2-9D5C-172D530B6F27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{EAE0B95D-6B57-4C15-A519-459FF7776B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAE0B95D-6B57-4C15-A519-459FF7776B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAE0B95D-6B57-4C15-A519-459FF7776B7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AE0D465-15AB-4AAF-9FE8-66FAAEAFE226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AE0D465-15AB-4AAF-9FE8-66FAAEAFE226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AE0D465-15AB-4AAF-9FE8-66FAAEAFE226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AE0D465-15AB-4AAF-9FE8-66FAAEAFE226}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2B30C81-50F2-40D2-9D5C-172D530B6F27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2B30C81-50F2-40D2-9D5C-172D530B6F27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2B30C81-50F2-40D2-9D5C-172D530B6F27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2B30C81-50F2-40D2-9D5C-172D530B6F27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
