@@ -1,7 +1,4 @@
-
-using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
-using Serilog.Events;
 using SmsGatekeeper.Models;
 using SmsGatekeeper.Services;
 using StackExchange.Redis;
@@ -15,7 +12,6 @@ namespace SmsGatekeeper
             Log.Logger = new LoggerConfiguration()
                  .MinimumLevel.Information()
                  .WriteTo.Console()
-
                  .CreateLogger();
 
             var builder = WebApplication.CreateBuilder(args);
@@ -23,7 +19,6 @@ namespace SmsGatekeeper
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSerilog();
@@ -38,7 +33,6 @@ namespace SmsGatekeeper
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

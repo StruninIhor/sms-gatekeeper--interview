@@ -1,6 +1,0 @@
-@SmsGatekeeper_HostAddress = http://localhost:5051
-
-GET {{SmsGatekeeper_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
