@@ -1,6 +1,10 @@
 
+using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
 using Serilog.Events;
+using SmsGatekeeper.Models;
+using SmsGatekeeper.Services;
+using StackExchange.Redis;
 
 namespace SmsGatekeeper
 {
@@ -23,7 +27,14 @@ namespace SmsGatekeeper
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSerilog();
-            
+
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>(
+                ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")));
+
+            builder.Services.AddScoped<ISmsService, SmsService>();
+
+            builder.Services.Configure<SmsRateLimitOptions>(builder.Configuration.GetSection("SmsRateLimitOptions"));
 
             var app = builder.Build();
 

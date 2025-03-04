@@ -10,17 +10,14 @@ namespace SmsGatekeeper.Controllers
     {
         private readonly ISmsService _smsService = smsService ?? throw new ArgumentNullException(nameof(smsService));
 
-        [HttpGet]
+        [HttpPost]
 
         /// <summary>
         /// Returns whether this phoneNumber can send an SMS message.
         /// </summary>
         /// <param name="phoneNumber">Phone number in format "1NPANXXXXX", where 1 - country code, NPA - area code, NXX - exchange code, XXXX - subscriber number. Now only supports US/Canada</param>
         /// <returns></returns>
-        public async Task<IActionResult> CanSendSms(PhoneNumber phoneNumber) => 
-            Ok(new
-                {
-                    CanSend = await _smsService.CanSendSms(phoneNumber)
-                });
+        public async Task<IActionResult> CanSendSms(SendMessageRequest request) =>
+            await _smsService.CanSendSms(request.AccountId, request.PhoneNumber) ? Ok() : Problem(statusCode:  StatusCodes.Status429TooManyRequests);
     }
 }

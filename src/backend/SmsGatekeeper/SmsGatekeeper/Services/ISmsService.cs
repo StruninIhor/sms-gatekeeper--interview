@@ -4,6 +4,6 @@ namespace SmsGatekeeper.Services
 {
     public interface ISmsService
     {
-        public ValueTask<bool> CanSendSms(PhoneNumber phoneNumber);
+        public ValueTask<bool> CanSendSms(string accountId, PhoneNumber phoneNumber);
     }
 }
