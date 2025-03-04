@@ -18,6 +18,8 @@ namespace SmsGatekeeper.Services
 
                     account_key = new RedisKey($"sms_rate:account:{accountId}"),
                     phone_key = new RedisKey($"sms_rate:number:{phoneNumber}"),
+                    account_id = accountId,
+                    phone = $"{phoneNumber}",
                     window = 1000, // 1 second 
                     per_number = _options.Value.PerNumber,
                     per_account = _options.Value.PerAccount,
@@ -40,14 +42,18 @@ namespace SmsGatekeeper.Services
                 local now = tonumber(current_time[1]) * 1000 + tonumber(current_time[2]) / 1000
 
                 local trim_time = tonumber(current_time[1]) - @window
-
-
+                local event_channel = 'rate_limit_events'
+  
                 redis.call('ZREMRANGEBYSCORE', @phone_key, 0, trim_time)
                 redis.call('ZREMRANGEBYSCORE', @account_key, 0, trim_time)
 
                 local account_count = redis.call('ZCARD', @account_key)
+
+                local event_message = string.format('%s:%s:%s', @account_id, @phone, now)
+        
             
                 if account_count >= tonumber(@per_account) then
+                    redis.call('PUBLISH', event_channel, 'rate_limit:blocked:account:' .. event_message)
                     return 0
                 end
 
@@ -59,10 +65,12 @@ namespace SmsGatekeeper.Services
 
                 if phone_count >= tonumber(@per_number) then
                     redis.call('ZREM', @account_key, now)
+                    redis.call('PUBLISH', event_channel, 'rate_limit:blocked:phone:' .. event_message)
                     return 0
                 end
                 redis.call('ZADD', @phone_key, current_time[1], current_time[1] .. current_time[2])
                 redis.call('EXPIRE', @phone_key, @expire_time)
+                redis.call('PUBLISH', event_channel, 'rate_limit:allowed:' .. event_message)
                 return 1
             ";
 

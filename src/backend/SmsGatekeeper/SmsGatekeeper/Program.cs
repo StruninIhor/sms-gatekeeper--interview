@@ -20,7 +20,10 @@ namespace SmsGatekeeper
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SchemaFilter<PhoneNumberSchemaFilter>();
+            });
             builder.Services.AddSerilog();
 
 
