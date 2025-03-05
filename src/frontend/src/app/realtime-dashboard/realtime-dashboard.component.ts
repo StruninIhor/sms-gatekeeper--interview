@@ -5,8 +5,7 @@ import { interval, Subscription } from 'rxjs';
 import * as signalR from '@microsoft/signalr';
 
 interface MetricPoint {
-  timestamp: string;
-  messagesPerSecond: number;
+  count: number;
 }
 
 @Component({
@@ -18,7 +17,7 @@ interface MetricPoint {
 export class RealtimeDashboardComponent implements OnInit, OnDestroy {
   private updateSubscription: Subscription | undefined;
   private hubConnection: signalR.HubConnection | undefined;
-  private readonly API_URL = 'http://localhost:3000';
+  private readonly API_URL = 'http://localhost:5164';
 
   currentRate = 0;
   connectionError = false;
@@ -47,6 +46,7 @@ export class RealtimeDashboardComponent implements OnInit, OnDestroy {
           this.connectionError = false;
 
           this.hubConnection!.on('MetricsUpdate', (metric: MetricPoint) => {
+            console.log(`Metric received: ${metric.count}`);
             this.updateMetrics(metric);
           });
         })
@@ -65,13 +65,14 @@ export class RealtimeDashboardComponent implements OnInit, OnDestroy {
   private fallbackToPolling(): void {
     // If SignalR fails, fall back to polling
     this.updateSubscription = interval(1000).subscribe(() => {
-      this.http.get<MetricPoint>(`${this.API_URL}/api/metrics/current`).subscribe(
+      this.http.get<MetricPoint>(`http://localhost:3000/api/metrics/current`).subscribe(
         metric => this.updateMetrics(metric)
       );
     });
   }
 
   private updateMetrics(metric: MetricPoint): void {
-    this.currentRate = metric.messagesPerSecond;
+    this.currentRate = metric.count;
+    console.log(`Current rate: ${this.currentRate}`);
   }
 }
