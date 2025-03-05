@@ -14,12 +14,17 @@
           <input
             type="text"
             class="form-control"
+            [class.is-invalid]="phoneNumberInput.invalid && (phoneNumberInput.dirty || phoneNumberInput.touched)"
             id="phoneNumber"
             name="phoneNumber"
+            #phoneNumberInput="ngModel"
             [(ngModel)]="searchCriteria.phoneNumber"
             placeholder="1NPANXXXXX"
             pattern="^1[2-9][0-9]{9}$"
           >
+          <div class="invalid-feedback" *ngIf="phoneNumberInput.invalid && (phoneNumberInput.dirty || phoneNumberInput.touched)">
+            Please enter a valid phone number (format: 1NPANXXXXX)
+          </div>
         </div>
         <div class="col-md-3">
           <label for="accountId" class="form-label">Account ID</label>
@@ -53,7 +58,7 @@
           >
         </div>
         <div class="col-md-2 d-flex align-items-end">
-          <button type="submit" class="btn btn-primary me-2">Search</button>
+          <button type="submit" class="btn btn-primary me-2" [disabled]="searchForm.invalid && searchCriteria.phoneNumber">Search</button>
           <button type="button" class="btn btn-secondary" (click)="resetSearch()">Reset</button>
         </div>
       </form>

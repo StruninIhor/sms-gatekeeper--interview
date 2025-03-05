@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { HistoryRecord } from '../interfaces/history-record';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { catchError, of } from 'rxjs';
 
 interface SearchCriteria {
@@ -18,6 +18,11 @@ interface HistoryResponse {
   totalPages: number;
 }
 
+interface PaginationSettings {
+  pageSize: number;
+  currentPage: number;
+}
+
 @Component({
   selector: 'app-message-history',
   templateUrl: './message-history.component.html',
@@ -28,19 +33,43 @@ interface HistoryResponse {
 export class MessageHistoryComponent implements OnInit {
   private readonly API_URL = 'http://localhost:5164';
   private readonly FALLBACK_URL = 'http://localhost:3000';
+  private readonly STORAGE_KEY = 'messageHistoryPagination';
+
+  @ViewChild('searchForm') searchForm!: NgForm;
+  @ViewChild('phoneNumberInput') phoneNumberInput: any;
 
   historyRecords: HistoryRecord[] = [];
-  currentPage = 1;
-  pageSize = 10;
+  currentPage: number;
+  pageSize: number;
   totalPages = 1;
   totalRecords = 0;
   searchCriteria: SearchCriteria = {};
   usingFallback = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    const savedSettings = this.loadPaginationSettings();
+    this.currentPage = savedSettings.currentPage;
+    this.pageSize = savedSettings.pageSize;
+  }
 
   ngOnInit(): void {
     this.loadHistoryRecords();
+  }
+
+  private loadPaginationSettings(): PaginationSettings {
+    const savedSettings = localStorage.getItem(this.STORAGE_KEY);
+    if (savedSettings) {
+      return JSON.parse(savedSettings);
+    }
+    return { pageSize: 10, currentPage: 1 };
+  }
+
+  private savePaginationSettings(): void {
+    const settings: PaginationSettings = {
+      pageSize: this.pageSize,
+      currentPage: this.currentPage
+    };
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(settings));
   }
 
   getReasonClass(record: HistoryRecord): string {
@@ -83,23 +112,32 @@ export class MessageHistoryComponent implements OnInit {
   onPageChange(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
+      this.savePaginationSettings();
       this.loadHistoryRecords();
     }
   }
 
   onPageSizeChange(): void {
     this.currentPage = 1;
+    this.savePaginationSettings();
     this.loadHistoryRecords();
   }
 
   onSearch(): void {
-    this.currentPage = 1;
-    this.loadHistoryRecords();
+    if (this.searchForm.valid || !this.searchCriteria.phoneNumber) {
+      this.currentPage = 1;
+      this.savePaginationSettings();
+      this.loadHistoryRecords();
+    }
   }
 
   resetSearch(): void {
     this.searchCriteria = {};
     this.currentPage = 1;
+    this.savePaginationSettings();
+    if (this.searchForm) {
+      this.searchForm.resetForm();
+    }
     this.loadHistoryRecords();
   }
 }
