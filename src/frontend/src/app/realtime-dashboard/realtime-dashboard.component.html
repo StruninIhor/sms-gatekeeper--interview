@@ -1,0 +1,21 @@
+<div class="container mt-4">
+  <h2>Real-time Message Processing</h2>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="d-flex align-items-center">
+            <h3 class="mb-0 me-2">Current Rate:</h3>
+            <h2 class="mb-0 text-primary">{{ currentRate }}</h2>
+            <span class="ms-2">msg/sec</span>
+          </div>
+          <div *ngIf="connectionError" class="alert alert-warning mt-3">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            SignalR connection failed. Falling back to polling.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

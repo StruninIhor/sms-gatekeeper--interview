@@ -1,0 +1,117 @@
+<div class="container mt-4">
+  <h2>Message History</h2>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <form (ngSubmit)="onSearch()" #searchForm="ngForm" class="row g-3">
+        <div class="col-md-3">
+          <label for="phoneNumber" class="form-label">Phone Number</label>
+          <input
+            type="text"
+            class="form-control"
+            id="phoneNumber"
+            name="phoneNumber"
+            [(ngModel)]="searchCriteria.phoneNumber"
+            placeholder="1NPANXXXXX"
+            pattern="^1[2-9][0-9]{9}$"
+          >
+        </div>
+        <div class="col-md-3">
+          <label for="accountId" class="form-label">Account ID</label>
+          <input
+            type="text"
+            class="form-control"
+            id="accountId"
+            name="accountId"
+            [(ngModel)]="searchCriteria.accountId"
+            placeholder="ACC_..."
+          >
+        </div>
+        <div class="col-md-2">
+          <label for="startDate" class="form-label">Start Date</label>
+          <input
+            type="datetime-local"
+            class="form-control"
+            id="startDate"
+            name="startDate"
+            [(ngModel)]="searchCriteria.startDate"
+          >
+        </div>
+        <div class="col-md-2">
+          <label for="endDate" class="form-label">End Date</label>
+          <input
+            type="datetime-local"
+            class="form-control"
+            id="endDate"
+            name="endDate"
+            [(ngModel)]="searchCriteria.endDate"
+          >
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary me-2">Search</button>
+          <button type="button" class="btn btn-secondary" (click)="resetSearch()">Reset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Requested At</th>
+          <th>Phone Number</th>
+          <th>Account ID</th>
+          <th>Status</th>
+          <th>Rate Limit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let record of historyRecords">
+          <td>{{ record.id }}</td>
+          <td>{{ record.requestedAt | date:'medium' }}</td>
+          <td>{{ record.phoneNumber }}</td>
+          <td>{{ record.accountId }}</td>
+          <td>
+            <span [class]="record.allowed ? 'badge bg-success' : 'badge bg-danger'">
+              {{ record.allowed ? 'Allowed' : 'Blocked' }}
+            </span>
+          </td>
+          <td>
+            <span [class]="record.accountRateHit ? 'badge bg-warning' : 'badge bg-success'">
+              {{ record.accountRateHit ? 'Rate Limited' : 'OK' }}
+            </span>
+          </td>
+        </tr>
+        <tr *ngIf="historyRecords.length === 0">
+          <td colspan="6" class="text-center">No records found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <div>
+      <select class="form-select" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option [value]="10">10 per page</option>
+        <option [value]="25">25 per page</option>
+        <option [value]="50">50 per page</option>
+      </select>
+    </div>
+
+    <nav aria-label="Message history pagination">
+      <ul class="pagination mb-0">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="onPageChange(currentPage - 1)" href="javascript:void(0)">Previous</a>
+        </li>
+        <li class="page-item">
+          <span class="page-link">Page {{ currentPage }} of {{ totalPages }}</span>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" (click)="onPageChange(currentPage + 1)" href="javascript:void(0)">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
