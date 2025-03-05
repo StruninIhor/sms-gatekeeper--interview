@@ -1,6 +1,11 @@
 <div class="container mt-4">
   <h2>Message History</h2>
 
+  <div *ngIf="usingFallback" class="alert alert-warning mb-4">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    Main API is not accessible. Using fallback data source.
+  </div>
+
   <div class="card mb-4">
     <div class="card-body">
       <form (ngSubmit)="onSearch()" #searchForm="ngForm" class="row g-3">
@@ -9,12 +14,17 @@
           <input
             type="text"
             class="form-control"
+            [class.is-invalid]="phoneNumberInput.invalid && (phoneNumberInput.dirty || phoneNumberInput.touched)"
             id="phoneNumber"
             name="phoneNumber"
+            #phoneNumberInput="ngModel"
             [(ngModel)]="searchCriteria.phoneNumber"
             placeholder="1NPANXXXXX"
             pattern="^1[2-9][0-9]{9}$"
           >
+          <div class="invalid-feedback" *ngIf="phoneNumberInput.invalid && (phoneNumberInput.dirty || phoneNumberInput.touched)">
+            Please enter a valid phone number (format: 1NPANXXXXX)
+          </div>
         </div>
         <div class="col-md-3">
           <label for="accountId" class="form-label">Account ID</label>
@@ -48,7 +58,7 @@
           >
         </div>
         <div class="col-md-2 d-flex align-items-end">
-          <button type="submit" class="btn btn-primary me-2">Search</button>
+          <button type="submit" class="btn btn-primary me-2" [disabled]="searchForm.invalid && searchCriteria.phoneNumber">Search</button>
           <button type="button" class="btn btn-secondary" (click)="resetSearch()">Reset</button>
         </div>
       </form>
@@ -64,7 +74,7 @@
           <th>Phone Number</th>
           <th>Account ID</th>
           <th>Status</th>
-          <th>Rate Limit</th>
+          <th>Reason</th>
         </tr>
       </thead>
       <tbody>
@@ -79,8 +89,8 @@
             </span>
           </td>
           <td>
-            <span [class]="record.accountRateHit ? 'badge bg-warning' : 'badge bg-success'">
-              {{ record.accountRateHit ? 'Rate Limited' : 'OK' }}
+            <span [class]="getReasonClass(record)">
+              {{ getReasonText(record) }}
             </span>
           </td>
         </tr>

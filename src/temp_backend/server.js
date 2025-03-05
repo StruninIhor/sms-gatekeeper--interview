@@ -82,13 +82,11 @@ const generateMetrics = () => {
 // Endpoint for real-time metrics - returns last 120 seconds of data
 app.get('/api/metrics/realtime', (req, res) => {
   const metrics = [];
-  const now = new Date();
   
   // Generate 120 data points, one per second for the last 2 minutes
   for (let i = 119; i >= 0; i--) {
     metrics.push({
-      timestamp: new Date(now.getTime() - i * 1000),
-      messagesPerSecond: Math.max(0, 50 + Math.floor(Math.random() * 40) - 20)
+      count: Math.max(0, 50 + Math.floor(Math.random() * 40) - 20)
     });
   }
   
