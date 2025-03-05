@@ -80,7 +80,7 @@
       <tbody>
         <tr *ngFor="let record of historyRecords">
           <td>{{ record.id }}</td>
-          <td>{{ record.requestedAt | date:'medium' }}</td>
+          <td>{{ record.requestedAt | date:'M/d/yy h:mm:ss.SSS a' }}</td>
           <td>{{ record.phoneNumber }}</td>
           <td>{{ record.accountId }}</td>
           <td>
