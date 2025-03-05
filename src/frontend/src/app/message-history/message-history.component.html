@@ -20,7 +20,7 @@
             #phoneNumberInput="ngModel"
             [(ngModel)]="searchCriteria.phoneNumber"
             placeholder="1NPANXXXXX"
-            pattern="^1[2-9][0-9]{9}$"
+            pattern="^1[1-9][0-9]{9}$"
           >
           <div class="invalid-feedback" *ngIf="phoneNumberInput.invalid && (phoneNumberInput.dirty || phoneNumberInput.touched)">
             Please enter a valid phone number (format: 1NPANXXXXX)
