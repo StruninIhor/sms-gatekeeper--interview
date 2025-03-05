@@ -2,6 +2,8 @@ using Serilog;
 using SmsDataApi.HostedServices;
 using SmsDataApi.Hubs;
 using StackExchange.Redis;
+using SmsGatekeeper.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace SmsDataApi
 {
@@ -26,6 +28,9 @@ namespace SmsDataApi
             builder.Services.AddHostedService<RealtimeUpdatesService>();
             builder.Services.AddSignalR();
             
+            // Add DbContext
+            builder.Services.AddDbContext<SmsContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("SmsDatabase")));
 
             builder.Services.AddSingleton<IConnectionMultiplexer>(
                 ConnectionMultiplexer.Connect(builder.Configuration.GetConnectionString("Redis")));
