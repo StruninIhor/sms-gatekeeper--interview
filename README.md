@@ -79,7 +79,7 @@ Located in `src/frontend/`:
 ## API Endpoints
 
 ### SmsGatekeeper API
-- `POST /sms/cansend`: Validates if a message can be sent based on rate limits
+- `POST /sms/cansendsms`: Validates if a message can be sent based on rate limits
 
 ### SmsDataApi
 - `GET /api/history`: Retrieves message history with filtering and pagination
